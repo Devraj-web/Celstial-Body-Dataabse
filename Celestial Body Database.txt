@@ -1,0 +1,46 @@
+-- Create the Celestial_Bodies table
+CREATE TABLE Celestial_Bodies (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    type ENUM('Star', 'Planet', 'Moon', 'Asteroid', 'Comet', 'Other') NOT NULL,
+    mass FLOAT NOT NULL, -- in kilograms
+    diameter FLOAT NOT NULL, -- in kilometers
+    distance_from_earth FLOAT, -- in light-years
+    description TEXT
+);
+
+-- Create the Stars table
+CREATE TABLE Stars (
+    id INT PRIMARY KEY,
+    spectral_type VARCHAR(10), -- e.g., O, B, A, F, G, K, M
+    luminosity FLOAT, -- in solar luminosities
+    temperature FLOAT, -- in Kelvin
+    FOREIGN KEY (id) REFERENCES Celestial_Bodies(id)
+);
+
+-- Create the Planets table
+CREATE TABLE Planets (
+    id INT PRIMARY KEY,
+    orbital_period FLOAT, -- in Earth years
+    distance_from_star FLOAT, -- in AU
+    has_rings BOOLEAN,
+    FOREIGN KEY (id) REFERENCES Celestial_Bodies(id)
+);
+
+-- Create the Moons table
+CREATE TABLE Moons (
+    id INT PRIMARY KEY,
+    planet_id INT,
+    orbital_period FLOAT, -- in Earth days
+    FOREIGN KEY (id) REFERENCES Celestial_Bodies(id),
+    FOREIGN KEY (planet_id) REFERENCES Planets(id)
+);
+
+-- Create the Discoveries table
+CREATE TABLE Discoveries (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    celestial_body_id INT NOT NULL,
+    discovered_by VARCHAR(100), -- name of the astronomer or mission
+    discovery_date DATE,
+    FOREIGN KEY (celestial_body_id) REFERENCES Celestial_Bodies(id)
+);
